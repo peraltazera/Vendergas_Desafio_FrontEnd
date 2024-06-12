@@ -71,6 +71,16 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
           if (response.length > 0) {
             const idCompanies = new Set(this.companiesDatas.map(e => e._id));
             this.productsDatas = response.filter(obj => idCompanies.has(obj.empresa));
+
+            this.productsDatas.map(obj => {
+              let company = this.companiesDatas.find(comp => comp._id === obj.empresa);
+              console.log(company)
+              if (company) {
+                obj.empresaNome = company.nomeFantasia;
+                console.log(obj.empresaNome)
+              }
+            });
+
             console.log(this.productsDatas)
           }
         },

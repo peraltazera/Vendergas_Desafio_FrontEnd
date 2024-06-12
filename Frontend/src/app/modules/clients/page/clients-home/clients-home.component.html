@@ -3,6 +3,7 @@
 
 <app-clients-table
   [clients]="clientsDatas"
+  [companies]="companiesDatas"
   (clientEvent)="handleClientAction($event)"
   (deleteClientEvent)="handleDeleteClientAction($event)"
 ></app-clients-table>

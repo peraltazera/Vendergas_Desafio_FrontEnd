@@ -4,4 +4,5 @@ export interface GetAllProductsResponse {
   valor: number;
   descricao: string;
   empresa: string;
+  empresaNome: string;
 }

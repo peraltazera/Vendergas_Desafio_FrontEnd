@@ -4,4 +4,5 @@ export interface GetAllClientResponse {
   email: string;
   telefone: string;
   empresa: string;
+  empresaNome: string;
 }
