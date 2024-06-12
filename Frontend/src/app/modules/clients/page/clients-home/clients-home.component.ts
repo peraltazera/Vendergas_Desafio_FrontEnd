@@ -2,30 +2,30 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ProductsService } from '../../../../services/products/products.service';
-import { ProductsDataTransferService } from 'src/app/shared/services/products/products-data-transfer.service';
-import { GetAllProductsResponse } from 'src/app/models/interfaces/products/response/GetAllProductsResponse';
+import {ClientsService } from '../../../../services/clients/clients.service';
+import { ClientsDataTransferService } from 'src/app/shared/services/clients/clients-data-transfer.service';
+import { GetAllClientResponse } from 'src/app/models/interfaces/clients/response/GetAllClientResponse';
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ProductFormComponent } from '../../components/product-form/product-form.component';
+import { ClientsFormComponent } from '../../components/clients-form/clients-form.component';
 import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 
 @Component({
-  selector: 'app-products-home',
-  templateUrl: './products-home.component.html',
-  styleUrls: [],
+  selector: 'app-clients-home',
+  templateUrl: './clients-home.component.html',
+  styleUrls: []
 })
-export class ProductsHomeComponent implements OnInit, OnDestroy {
+export class ClientsHomeComponent implements OnInit, OnDestroy{
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
-  public productsDatas: Array<GetAllProductsResponse> = [];
+  public clientsDatas: Array<GetAllClientResponse> = [];
   public companiesDatas: Array<GetCompaniesResponse> = [];
 
   constructor(
     private companiesService: CompaniesService,
-    private productsService: ProductsService,
-    private productsDtService: ProductsDataTransferService,
+    private clientsService: ClientsService,
+    private clientsDtService: ClientsDataTransferService,
     private router: Router,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -34,7 +34,7 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getAllCompanies();
-    this.getServiceProductsDatas();
+    this.getServiceClientsDatas();
   }
 
   getAllCompanies(): void {
@@ -51,27 +51,26 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
       });
   }
 
+  getServiceClientsDatas() {
+    const clisntsLoaded = this.clientsDtService.getClientsDatas();
 
-  getServiceProductsDatas() {
-    const productsLoaded = this.productsDtService.getProductsDatas();
-
-    if (productsLoaded.length > 0) {
-      this.productsDatas = productsLoaded;
-      console.log(this.productsDatas)
-    } else this.getAPIProductsDatas();
+    if (clisntsLoaded.length > 0) {
+      this.clientsDatas = clisntsLoaded;
+      console.log(this.clientsDatas)
+    } else this.getAPIClientsDatas();
 
   }
 
-  getAPIProductsDatas() {
-    this.productsService
-      .getAllProducts()
+  getAPIClientsDatas() {
+    this.clientsService
+      .getAllClients()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
             const idCompanies = new Set(this.companiesDatas.map(e => e._id));
-            this.productsDatas = response.filter(obj => idCompanies.has(obj.empresa));
-            console.log(this.productsDatas)
+            this.clientsDatas = response.filter(obj => idCompanies.has(obj.empresa));
+            console.log(this.clientsDatas)
           }
         },
         error: (err) => {
@@ -79,17 +78,17 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar produtos',
+            detail: 'Erro ao buscar clients',
             life: 2500,
           });
-          this.router.navigate(['/products']);
+          this.router.navigate(['/clients']);
         },
       });
   }
 
-  handleProductAction(event: EventAction): void {
+  handleClientAction(event: EventAction): void {
     if (event) {
-      this.ref = this.dialogService.open(ProductFormComponent, {
+      this.ref = this.dialogService.open(ClientsFormComponent, {
         header: event?.action,
         width: '70%',
         contentStyle: { overflow: 'auto' },
@@ -97,35 +96,35 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
         maximizable: true,
         data: {
           event: event,
-          productDatas: this.productsDatas,
+          clientDatas: this.clientsDatas,
         },
       });
       this.ref.onClose.pipe(takeUntil(this.destroy$)).subscribe({
-        next: () => this.getAPIProductsDatas(),
+        next: () => this.getAPIClientsDatas(),
       });
     }
   }
 
-  handleDeleteProductAction(event: {
-    product_id: string;
-    productName: string;
+  handleDeleteClientAction(event: {
+    client_id: string;
+    clientName: string;
   }): void {
     if (event) {
       this.confirmationService.confirm({
-        message: `Confirma a exclusão do produto: ${event?.productName}?`,
+        message: `Confirma a exclusão do cliente: ${event?.clientName}?`,
         header: 'Confirmação de exclusão',
         icon: 'pi pi-exclamation-triangle',
         acceptLabel: 'Sim',
         rejectLabel: 'Não',
-        accept: () => this.deleteProduct(event?.product_id),
+        accept: () => this.deleteClient(event?.client_id),
       });
     }
   }
 
-  deleteProduct(product_id: string) {
-    if (product_id) {
-      this.productsService
-        .deleteProduct(product_id)
+  deleteClient(client_id: string) {
+    if (client_id) {
+      this.clientsService
+        .deleteClient(client_id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
@@ -133,11 +132,11 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Sucesso',
-                detail: 'Produto removido com sucesso!',
+                detail: 'Cliente removido com sucesso!',
                 life: 2500,
               });
 
-              this.getAPIProductsDatas();
+              this.getAPIClientsDatas();
             }
           },
           error: (err) => {
@@ -145,7 +144,7 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao remover produto!',
+              detail: 'Erro ao remover cliente!',
               life: 2500,
             });
           },

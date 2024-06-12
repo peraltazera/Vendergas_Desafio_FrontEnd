@@ -1,0 +1,155 @@
+<div class="grid">
+  <div class="col-12">
+    <p-card
+      styleClass="shadow-3 m-5 text-indigo-800"
+      header="Clientes"
+    >
+      <p-table
+        #productsTable
+        [value]="clients"
+        [rows]="10"
+        [paginator]="true"
+        [responsive]="true"
+        [globalFilterFields]="['name', 'amount']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [(selection)]="clientSelected"
+        [rowHover]="true"
+        [showCurrentPageReport]="true"
+        dataKey="id"
+        currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} produtos"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="name">
+              <div class="flex justify-content-between align-items-center">
+                <div class="flex justify-content-between align-items-center">
+                  Nome
+                </div>
+                <div class="flex justify-content-between align-items-center">
+                  <p-sortIcon field="name"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="name"
+                    display="menu"
+                    matchMode="contains"
+                    [showMatchModes]="false"
+                    [showOperator]="false"
+                    [showAddButton]="false"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th pSortableColumn="email">
+              <div class="flex justify-content-between align-items-center">
+                <div class="flex justify-content-between align-items-center">
+                  email
+                </div>
+                <div class="flex justify-content-between align-items-center">
+                  <p-sortIcon field="email"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="email"
+                    display="menu"
+                    matchMode="contains"
+                    [showMatchModes]="false"
+                    [showOperator]="false"
+                    [showAddButton]="false"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th pSortableColumn="telefone">
+              <div class="flex justify-content-between align-items-center">
+                <div class="flex justify-content-between align-items-center">
+                  telefone
+                </div>
+                <div class="flex justify-content-between align-items-center">
+                  <p-sortIcon field="telefone"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="telefone"
+                    display="menu"
+                    matchMode="contains"
+                    [showMatchModes]="false"
+                    [showOperator]="false"
+                    [showAddButton]="false"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th pSortableColumn="empresa">
+              <div class="flex justify-content-between align-items-center">
+                <div class="flex justify-content-between align-items-center">
+                  Empresa
+                </div>
+                <div class="flex justify-content-between align-items-center">
+                  <p-sortIcon field="empresa"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="empresa"
+                    display="menu"
+                    matchMode="contains"
+                    [showMatchModes]="false"
+                    [showOperator]="false"
+                    [showAddButton]="false"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th>
+              <div class="flex justify-content-center">
+                <p-button
+                  styleClass="p-button-info"
+                  icon="pi pi-plus"
+                  label="Adicionar"
+                  pTooltip="Adicionar produto"
+                  tooltipPosition="top"
+                  (onClick)="handleClientEvent(addClientEvent)"
+                ></p-button>
+              </div>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-client>
+          <tr>
+            <td>{{ client?.nome }}</td>
+            <td>{{ client?.email }}</td>
+            <td>{{ client?.telefone }}</td>
+            <td>{{ client?.empresa }}</td>
+            <td>
+              <div
+                class="flex justify-content-center gap-3 align-content-center align-items-center"
+              >
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-warning"
+                  pTooltip="Editar produto"
+                  tooltipPosition="top"
+                  (click)="handleClientEvent(editClientEvent, client?._id)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger"
+                  pTooltip="Remover Produto"
+                  tooltipPosition="top"
+                  (click)="handleDeleteClient(client?._id, client?.nome)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+
+

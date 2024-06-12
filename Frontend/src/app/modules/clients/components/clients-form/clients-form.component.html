@@ -1,0 +1,52 @@
+<div *ngIf="clientAction?.event?.action === addClientAction">
+  <form [formGroup]="addClientForm" (ngSubmit)="handleSubmitAddClient()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <!-- Nome do produto -->
+      <input pInputText placeholder="Nome" formControlName="nome" />
+      <!-- Categoria do produto -->
+      <p-dropdown
+        styleClass="w-full"
+        [options]="companiesDatas"
+        [(ngModel)]="selectedCompany"
+        optionLabel="nomeFantasia"
+        optionValue="_id"
+        placeholder="Selecione uma empresa"
+        formControlName="empresa"
+      ></p-dropdown>
+      <!-- Preço do produto -->
+      <input pInputText placeholder="Email" formControlName="email" />
+      <!-- Descrição do produto -->
+      <input pInputText placeholder="Telefone" formControlName="telefone" />
+      <!-- Quantidade do produto -->
+      <div class="flex flex-row justify-content-center align-content-center align-items-center m-1">
+        <p-button
+        [disabled]="!addClientForm.valid"
+        type="submit"
+        label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="clientAction?.event?.action === editClientAction">
+  <form [formGroup]="editClientForm" (ngSubmit)="handleSubmitEditClient()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <input pInputText placeholder="Nome" formControlName="nome" />
+      <input pInputText placeholder="Email" formControlName="email" />
+      <input pInputText placeholder="Telefone" formControlName="telefone" />
+
+      <div
+        class="flex flex-row justify-content-center align-content-center align-items-center"
+      >
+        <p-button
+          [disabled]="!editClientForm.valid"
+          type="submit"
+          label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
