@@ -14,12 +14,12 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'dashboard',
+    path: 'products',
     loadChildren: () =>
-      import('./modules/dashboard/dashboard.module').then(
-        (m) => m.DashboardModule
+      import('./modules/products/products.module').then(
+        (m) => m.ProductsModule
       ),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
 ];
 
