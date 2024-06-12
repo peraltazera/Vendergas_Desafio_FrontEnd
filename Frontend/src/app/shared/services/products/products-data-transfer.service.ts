@@ -18,6 +18,7 @@ export class ProductsDataTransferService {
   }
 
   getProductsDatas() {
+    console.log("produto")
     this.productsDataEmitter$
       .pipe(
         take(1)
@@ -30,6 +31,7 @@ export class ProductsDataTransferService {
           }
         },
       });
+      console.log(this.productsDatas)
     return this.productsDatas;
   }
 }

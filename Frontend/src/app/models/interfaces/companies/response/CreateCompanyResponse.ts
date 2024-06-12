@@ -1,5 +1,5 @@
-export interface GetCompaniesResponse {
-  id: string;
+export interface CreateCompanyResponse {
+  _id: string;
   nomeFantasia: string;
   razaoSocial: string;
   cnpj: string;

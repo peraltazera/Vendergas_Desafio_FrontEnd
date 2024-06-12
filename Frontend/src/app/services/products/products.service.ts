@@ -15,6 +15,7 @@ import { EditProductRequest } from 'src/app/models/interfaces/products/request/E
 export class ProductsService {
   private API_URL = environment.API_URL;
   private JWT_TOKEN = this.cookie.get('USER_INFO');
+  private ID_USER = this.cookie.get('USER_ID');
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',

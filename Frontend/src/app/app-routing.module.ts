@@ -6,7 +6,7 @@ import { AuthGuard } from './guards/auth-guard.service';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'products',
     pathMatch: 'full',
   },
   {
@@ -18,6 +18,14 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/products/products.module').then(
         (m) => m.ProductsModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'companies',
+    loadChildren: () =>
+      import('./modules/companies/companies.module').then(
+        (m) => m.CompaniesModule
       ),
     canActivate: [AuthGuard],
   },

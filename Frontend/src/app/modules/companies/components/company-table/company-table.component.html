@@ -1,0 +1,133 @@
+<div class="grid">
+  <div class="col-12">
+    <p-card
+      styleClass="shadow-3 m-5 text-indigo-800"
+      header="Empresas"
+    >
+      <p-table
+        #productsTable
+        [value]="companies"
+        [rows]="10"
+        [paginator]="true"
+        [responsive]="true"
+        [globalFilterFields]="['name', 'amount']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [(selection)]="companySelected"
+        [rowHover]="true"
+        [showCurrentPageReport]="true"
+        dataKey="id"
+        currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} produtos"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="name">
+              <div class="flex justify-content-between align-items-center">
+                <div class="flex justify-content-between align-items-center">
+                  Nome Fantasia
+                </div>
+                <div class="flex justify-content-between align-items-center">
+                  <p-sortIcon field="name"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="name"
+                    display="menu"
+                    matchMode="contains"
+                    [showMatchModes]="false"
+                    [showOperator]="false"
+                    [showAddButton]="false"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th pSortableColumn="price">
+              <div class="flex justify-content-between align-items-center">
+                <div class="flex justify-content-between align-items-center">
+                  Razao Social
+                </div>
+                <div class="flex justify-content-between align-items-center">
+                  <p-sortIcon field="price"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="price"
+                    display="menu"
+                    matchMode="contains"
+                    [showMatchModes]="false"
+                    [showOperator]="false"
+                    [showAddButton]="false"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th pSortableColumn="description">
+              <div class="flex justify-content-between align-items-center">
+                <div class="flex justify-content-between align-items-center">
+                  CNPJ
+                </div>
+                <div class="flex justify-content-between align-items-center">
+                  <p-sortIcon field="description"></p-sortIcon>
+                  <p-columnFilter
+                    type="text"
+                    field="description"
+                    display="menu"
+                    matchMode="contains"
+                    [showMatchModes]="false"
+                    [showOperator]="false"
+                    [showAddButton]="false"
+                  ></p-columnFilter>
+                </div>
+              </div>
+            </th>
+
+            <th>
+              <div class="flex justify-content-center">
+                <p-button
+                  styleClass="p-button-info"
+                  icon="pi pi-plus"
+                  label="Adicionar"
+                  pTooltip="Adicionar produto"
+                  tooltipPosition="top"
+                  (onClick)="handleCompanyEvent(addCompanyEvent)"
+                ></p-button>
+              </div>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-company>
+          <tr>
+            <td>{{ company?.nomeFantasia }}</td>
+            <td>{{ company?.razaoSocial }}</td>
+            <td>{{ company?.cnpj }}</td>
+            <td>
+              <div
+                class="flex justify-content-center gap-3 align-content-center align-items-center"
+              >
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-warning"
+                  pTooltip="Editar produto"
+                  tooltipPosition="top"
+                  (click)="handleCompanyEvent(editCompanyEvent, company?._id)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger"
+                  pTooltip="Remover Produto"
+                  tooltipPosition="top"
+                  (click)="handleDeleteCompany(company?._id, company?.nomeFantasia)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</div>
+

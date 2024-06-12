@@ -2,26 +2,26 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ProductsService } from '../../../../services/products/products.service';
-import { ProductsDataTransferService } from 'src/app/shared/services/products/products-data-transfer.service';
-import { GetAllProductsResponse } from 'src/app/models/interfaces/products/response/GetAllProductsResponse';
+import { CompaniesService } from '../../../../services/companies/companies.service';
+import { CompaniesDataTransferService } from 'src/app/shared/services/companies/companies-data-transfer.service';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ProductFormComponent } from '../../components/product-form/product-form.component';
+import { CompanyFormComponent } from '../../components/company-form/company-form.component';
 
 @Component({
-  selector: 'app-products-home',
-  templateUrl: './products-home.component.html',
-  styleUrls: [],
+  selector: 'app-companies-home',
+  templateUrl: './companies-home.component.html',
+  styleUrls: []
 })
-export class ProductsHomeComponent implements OnInit, OnDestroy {
+export class CompaniesHomeComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
-  public productsDatas: Array<GetAllProductsResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
 
   constructor(
-    private productsService: ProductsService,
-    private productsDtService: ProductsDataTransferService,
+    private companiesService: CompaniesService,
+    private companiesDtService: CompaniesDataTransferService,
     private router: Router,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -29,28 +29,28 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getServiceProductsDatas();
+    this.getServiceCompaniesDatas();
   }
 
-  getServiceProductsDatas() {
-    const productsLoaded = this.productsDtService.getProductsDatas();
+  getServiceCompaniesDatas() {
+    const companiesLoaded = this.companiesDtService.getCompaniesDatas();
 
-    if (productsLoaded.length > 0) {
-      this.productsDatas = productsLoaded;
-      console.log(this.productsDatas)
-    } else this.getAPIProductsDatas();
+    if (companiesLoaded.length > 0) {
+      this.companiesDatas = companiesLoaded;
+      console.log(this.companiesDatas)
+    } else this.getAPICompaniesDatas();
 
   }
 
-  getAPIProductsDatas() {
-    this.productsService
-      .getAllProducts()
+  getAPICompaniesDatas() {
+    this.companiesService
+      .getAllCompanies()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            this.productsDatas = response;
-            console.log(this.productsDatas)
+            this.companiesDatas = response;
+            console.log(this.companiesDatas)
           }
         },
         error: (err) => {
@@ -58,17 +58,17 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar produtos',
+            detail: 'Erro ao buscar empresa',
             life: 2500,
           });
-          this.router.navigate(['/products']);
+          this.router.navigate(['/companies']);
         },
       });
   }
 
-  handleProductAction(event: EventAction): void {
+  handleCompanyAction(event: EventAction): void {
     if (event) {
-      this.ref = this.dialogService.open(ProductFormComponent, {
+      this.ref = this.dialogService.open(CompanyFormComponent, {
         header: event?.action,
         width: '70%',
         contentStyle: { overflow: 'auto' },
@@ -76,35 +76,35 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
         maximizable: true,
         data: {
           event: event,
-          productDatas: this.productsDatas,
+          companyDatas: this.companiesDatas,
         },
       });
       this.ref.onClose.pipe(takeUntil(this.destroy$)).subscribe({
-        next: () => this.getAPIProductsDatas(),
+        next: () => this.getAPICompaniesDatas(),
       });
     }
   }
 
-  handleDeleteProductAction(event: {
-    product_id: string;
-    productName: string;
+  handleDeleteCompanyAction(event: {
+    company_id: string;
+    companyName: string;
   }): void {
     if (event) {
       this.confirmationService.confirm({
-        message: `Confirma a exclusão do produto: ${event?.productName}?`,
+        message: `Confirma a exclusão da empresa: ${event?.companyName}?`,
         header: 'Confirmação de exclusão',
         icon: 'pi pi-exclamation-triangle',
         acceptLabel: 'Sim',
         rejectLabel: 'Não',
-        accept: () => this.deleteProduct(event?.product_id),
+        accept: () => this.deleteCompany(event?.company_id),
       });
     }
   }
 
-  deleteProduct(product_id: string) {
+  deleteCompany(product_id: string) {
     if (product_id) {
-      this.productsService
-        .deleteProduct(product_id)
+      this.companiesService
+        .deleteCompany(product_id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
@@ -112,11 +112,11 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Sucesso',
-                detail: 'Produto removido com sucesso!',
+                detail: 'Empresa removida com sucesso!',
                 life: 2500,
               });
 
-              this.getAPIProductsDatas();
+              this.getAPICompaniesDatas();
             }
           },
           error: (err) => {
@@ -124,7 +124,7 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao remover produto!',
+              detail: 'Erro ao remover empresa!',
               life: 2500,
             });
           },

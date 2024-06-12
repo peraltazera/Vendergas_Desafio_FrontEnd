@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/responses/GetCompaniesResponse';
+import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 import { CreateProductRequest } from 'src/app/models/interfaces/products/request/CreateProductRequest';
 import { ProductsService } from 'src/app/services/products/products.service';
@@ -56,6 +56,10 @@ export class ProductFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.productAction = this.ref.data;
+
+    console.log(this.productAction?.event?.action)
+    console.log(this.editProductAction)
+    console.log(this.productAction?.productDatas)
 
     if (
       this.productAction?.event?.action === this.editProductAction &&
@@ -172,6 +176,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       );
 
       console.log(productFiltered)
+      console.log(productId)
 
       if (productFiltered) {
         this.productSelectedDatas = productFiltered[0];
