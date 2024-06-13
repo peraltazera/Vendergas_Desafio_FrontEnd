@@ -1,0 +1,62 @@
+<div *ngIf="orderAction?.event?.action === addOrderAction">
+  <form [formGroup]="addOrderForm" (ngSubmit)="handleSubmitAddOrder()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <input pInputText placeholder="Numero" formControlName="numero" />
+      <p-dropdown
+        styleClass="w-full"
+        [options]="companiesDatas"
+        [(ngModel)]="selectedCompany"
+        optionLabel="nomeFantasia"
+        optionValue="_id"
+        placeholder="Selecione uma empresa"
+        formControlName="empresa"
+        (onChange)="onCompanyChange($event.value)"
+      ></p-dropdown>
+      <p-dropdown
+      styleClass="w-full"
+      [options]="clientsDatasByCompanies"
+      [(ngModel)]="selectedClient"
+      optionLabel="nome"
+      optionValue="_id"
+      placeholder="Selecione um cliente"
+      formControlName="cliente"
+    ></p-dropdown>
+      <input pInputText placeholder="Observacao" formControlName="observacao" />
+      <p-calendar
+      styleClass="w-full"
+      placeholder="Selecione uma data"
+      formControlName="data"
+      dateFormat="dd/mm/yy"
+    ></p-calendar>
+      <div class="flex flex-row justify-content-center align-content-center align-items-center m-1">
+        <p-button
+        [disabled]="!addOrderForm.valid"
+        type="submit"
+        label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="orderAction?.event?.action === editOrderAction">
+  <form [formGroup]="editOrderForm" (ngSubmit)="handleSubmitEditOrder()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <input pInputText placeholder="Numero" formControlName="numero" />
+      <input pInputText placeholder="Observacao" formControlName="observacao" />
+      <input pInputText placeholder="Data" formControlName="data" />
+
+      <div
+        class="flex flex-row justify-content-center align-content-center align-items-center"
+      >
+        <p-button
+          [disabled]="!editOrderForm.valid"
+          type="submit"
+          label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+

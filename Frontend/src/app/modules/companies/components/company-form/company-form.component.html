@@ -1,0 +1,37 @@
+<div *ngIf="CompanyAction?.event?.action === addCompanyAction">
+  <form [formGroup]="addCompanyForm" (ngSubmit)="handleSubmitAddCompany()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <input pInputText placeholder="Nome Fantasia" formControlName="nomeFantasia" />
+      <input pInputText placeholder="Razao Social" formControlName="razaoSocial" />
+      <input pInputText placeholder="CNPJ" formControlName="cnpj" />
+      <div class="flex flex-row justify-content-center align-content-center align-items-center m-1">
+        <p-button
+        [disabled]="!addCompanyForm.valid"
+        type="submit"
+        label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="CompanyAction?.event?.action === editCompanyAction">
+  <form [formGroup]="editCompanyForm" (ngSubmit)="handleSubmitEditCompany()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <input pInputText placeholder="Nome Fantasia" formControlName="nomeFantasia" />
+      <input pInputText placeholder="Razao Social" formControlName="razaoSocial" />
+      <input pInputText placeholder="CNPJ" formControlName="cnpj" />
+
+      <div
+        class="flex flex-row justify-content-center align-content-center align-items-center"
+      >
+        <p-button
+          [disabled]="!editCompanyForm.valid"
+          type="submit"
+          label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+

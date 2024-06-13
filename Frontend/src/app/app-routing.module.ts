@@ -6,7 +6,7 @@ import { AuthGuard } from './guards/auth-guard.service';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'companies',
     pathMatch: 'full',
   },
   {
@@ -14,12 +14,44 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'dashboard',
+    path: 'products',
     loadChildren: () =>
-      import('./modules/dashboard/dashboard.module').then(
-        (m) => m.DashboardModule
+      import('./modules/products/products.module').then(
+        (m) => m.ProductsModule
       ),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'companies',
+    loadChildren: () =>
+      import('./modules/companies/companies.module').then(
+        (m) => m.CompaniesModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'clients',
+    loadChildren: () =>
+      import('./modules/clients/clients.module').then(
+        (m) => m.ClientsModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'orders',
+    loadChildren: () =>
+      import('./modules/orders/orders.module').then(
+        (m) => m.OrdersModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'ordersProducts',
+    loadChildren: () =>
+      import('./modules/orders-products/orders-products.module').then(
+        (m) => m.OrdersProductsModule
+      ),
+    canActivate: [AuthGuard],
   },
 ];
 
