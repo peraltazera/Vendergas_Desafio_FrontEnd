@@ -23,7 +23,7 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas em s
 
 Siga os passos abaixo para configurar o ambiente localmente:
 
-### Clonar o Repositório
+## Clonar o Repositório
 
 Clone o repositório do GitHub para o seu ambiente local usando o comando abaixo:
 
@@ -32,7 +32,7 @@ git clone https://github.com/seu-usuario/nome-do-repositorio.git
 cd nome-do-repositorio
 ```
 
-### Instalar Dependências
+## Instalar Dependências
 
 Depois de clonar o repositório, instale as dependências do projeto utilizando o npm:
 
@@ -40,7 +40,7 @@ Depois de clonar o repositório, instale as dependências do projeto utilizando 
 npm install
 ```
 
-### Rodando o Projeto
+## Rodando o Projeto
 
 Para rodar o projeto localmente, utilize o comando abaixo:
 
