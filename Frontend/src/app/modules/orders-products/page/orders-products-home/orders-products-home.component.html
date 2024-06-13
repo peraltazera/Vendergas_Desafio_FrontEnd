@@ -1,0 +1,9 @@
+<app-toolbar-navigation></app-toolbar-navigation>
+
+<app-orders-products-table
+  [ordersProducts]="OrdersProductsDatas"
+  (orderProductEvent)="handleOrderProductAction($event)"
+  (deleteOrderProductEvent)="handleDeleteOrderProductAction($event)"
+></app-orders-products-table>
+
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>

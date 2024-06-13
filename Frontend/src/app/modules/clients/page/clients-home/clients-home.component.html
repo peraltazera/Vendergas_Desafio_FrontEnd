@@ -1,0 +1,10 @@
+<app-toolbar-navigation></app-toolbar-navigation>
+
+<app-clients-table
+  [clients]="clientsDatas"
+  [companies]="companiesDatas"
+  (clientEvent)="handleClientAction($event)"
+  (deleteClientEvent)="handleDeleteClientAction($event)"
+></app-clients-table>
+
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
