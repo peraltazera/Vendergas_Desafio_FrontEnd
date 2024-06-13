@@ -8,7 +8,7 @@ import { GetAllOrderResponse } from 'src/app/models/interfaces/orders/response/G
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { OrderFormComponent } from '../../components/order-form/order-form.component';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 import { GetAllClientResponse } from 'src/app/models/interfaces/clients/response/GetAllClientResponse';
 import {ClientsService } from '../../../../services/clients/clients.service';
@@ -22,7 +22,7 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
   public ordersDatas: Array<GetAllOrderResponse> = [];
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
   public clientsDatas: Array<GetAllClientResponse> = [];
 
   constructor(
@@ -50,7 +50,6 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -65,7 +64,6 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
           if (response.length > 0) {
             const idCompanies = new Set(this.companiesDatas.map(e => e._id));
             this.clientsDatas = response.filter(obj => idCompanies.has(obj.empresa));
-            console.log(this.clientsDatas)
           }
         },
         error: (err) => {
@@ -73,7 +71,7 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar clients',
+            detail: err.error.message,
             life: 2500,
           });
           this.router.navigate(['/clients']);
@@ -87,7 +85,6 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
 
     if (ordersLoaded.length > 0) {
       this.ordersDatas = ordersLoaded;
-      console.log(this.ordersDatas)
     } else this.getAPIOrdersDatas();
 
   }
@@ -104,23 +101,17 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
 
             this.ordersDatas.map(obj => {
               let company = this.companiesDatas.find(comp => comp._id === obj.empresa);
-              console.log(company)
               if (company) {
                 obj.empresaNome = company.nomeFantasia;
-                console.log(obj.empresaNome)
               }
             });
 
             this.ordersDatas.map(obj => {
               let client = this.clientsDatas.find(cli=> cli._id === obj.cliente);
-              console.log(client)
               if (client) {
                 obj.clienteNome = client.nome;
-                console.log(obj.clienteNome)
               }
             });
-
-            console.log(this.ordersDatas)
           }
         },
         error: (err) => {
@@ -128,7 +119,7 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar pedido',
+            detail: err.error.message,
             life: 2500,
           });
           this.router.navigate(['/products']);
@@ -194,7 +185,7 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao remover pedido!',
+              detail: err.error.message,
               life: 2500,
             });
           },

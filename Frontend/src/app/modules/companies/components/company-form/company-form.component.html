@@ -1,13 +1,9 @@
 <div *ngIf="CompanyAction?.event?.action === addCompanyAction">
   <form [formGroup]="addCompanyForm" (ngSubmit)="handleSubmitAddCompany()">
     <div class="card flex flex-column md:flex-column gap-3">
-      <!-- Nome do produto -->
       <input pInputText placeholder="Nome Fantasia" formControlName="nomeFantasia" />
-      <!-- Preço do produto -->
       <input pInputText placeholder="Razao Social" formControlName="razaoSocial" />
-      <!-- Descrição do produto -->
       <input pInputText placeholder="CNPJ" formControlName="cnpj" />
-      <!-- Quantidade do produto -->
       <div class="flex flex-row justify-content-center align-content-center align-items-center m-1">
         <p-button
         [disabled]="!addCompanyForm.valid"

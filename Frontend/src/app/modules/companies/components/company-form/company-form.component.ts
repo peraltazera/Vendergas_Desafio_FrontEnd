@@ -3,7 +3,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 import { CreateCompanyRequest } from 'src/app/models/interfaces/companies/request/CreateCompanyRequest';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
@@ -22,8 +21,6 @@ import { CookieService } from 'ngx-cookie-service';
 export class CompanyFormComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   private ID_USER = this.cookie.get('USER_ID');
-  //public companiesDatas: Array<GetCompaniesResponse> = [];
-  //public selectedCompany: Array<{ nome: string; code: string }> = [];
   public CompanyAction!: {
     event: EventAction;
     companyDatas: Array<GetAllCompanyResponse>;
@@ -43,10 +40,8 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
   });
   public addCompanyAction = CompanyEvent.ADD_COMPANY_EVENT;
   public editCompanyAction = CompanyEvent.EDIT_COMPANY_EVENT;
-  public saleCompanyAction = CompanyEvent.SALE_COMPANY_EVENT;
 
   constructor(
-    //private companiesService: CompaniesService,
     private companiesService: CompaniesService,
     private companiesDtService: CompaniesDataTransferService,
     private formBuilder: FormBuilder,
@@ -59,21 +54,12 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.CompanyAction = this.ref.data;
 
-    console.log(this.CompanyAction?.event?.action)
-    console.log(this.editCompanyAction)
-    console.log(this.CompanyAction?.companyDatas)
-
     if (
       this.CompanyAction?.event?.action === this.editCompanyAction &&
       this.CompanyAction?.companyDatas
     ) {
       this.getCompanySelectedDatas(this.CompanyAction?.event?.id as string);
     }
-
-    this.CompanyAction?.event?.action === this.saleCompanyAction &&
-      this.getCompanyDatas();
-
-    //this.getAllCompanies();
   }
 
   getAllCompanies(): void {
@@ -84,7 +70,6 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -112,20 +97,19 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
                 life: 2500,
               });
             }
+            this.addCompanyForm.reset();
           },
           error: (err) => {
             console.log(err);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao criar produto!',
+              detail: err.error.message,
               life: 2500,
             });
           },
         });
     }
-
-    this.addCompanyForm.reset();
   }
 
   handleSubmitEditCompany(): void {
@@ -148,7 +132,7 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'success',
               summary: 'Sucesso',
-              detail: 'Produto editado com sucesso!',
+              detail: 'Empresa editada com sucesso!',
               life: 2500,
             });
             this.editCompanyForm.reset();
@@ -158,10 +142,9 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao editar produto!',
+              detail: err.error.message,
               life: 2500,
             });
-            this.editCompanyForm.reset();
           },
         });
     }
@@ -170,20 +153,13 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
   getCompanySelectedDatas(companyId: string): void {
     const allCompanies = this.CompanyAction?.companyDatas;
 
-    console.log(allCompanies)
-
     if (allCompanies.length > 0) {
       const companyFiltered = allCompanies.filter(
         (element) => element?._id === companyId
       );
 
-      console.log(companyFiltered)
-      console.log(companyId)
-
       if (companyFiltered) {
         this.companySelectedDatas = companyFiltered[0];
-
-        console.log(this.companySelectedDatas)
 
         this.editCompanyForm.setValue({
           nomeFantasia: this.companySelectedDatas?.nomeFantasia,

@@ -8,7 +8,7 @@ import { GetAllProductsResponse } from 'src/app/models/interfaces/products/respo
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ProductFormComponent } from '../../components/product-form/product-form.component';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
   public productsDatas: Array<GetAllProductsResponse> = [];
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
 
   constructor(
     private companiesService: CompaniesService,
@@ -45,7 +45,6 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -54,10 +53,8 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
 
   getServiceProductsDatas() {
     const productsLoaded = this.productsDtService.getProductsDatas();
-
     if (productsLoaded.length > 0) {
       this.productsDatas = productsLoaded;
-      console.log(this.productsDatas)
     } else this.getAPIProductsDatas();
 
   }
@@ -74,14 +71,10 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
 
             this.productsDatas.map(obj => {
               let company = this.companiesDatas.find(comp => comp._id === obj.empresa);
-              console.log(company)
               if (company) {
                 obj.empresaNome = company.nomeFantasia;
-                console.log(obj.empresaNome)
               }
             });
-
-            console.log(this.productsDatas)
           }
         },
         error: (err) => {
@@ -89,7 +82,7 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar produtos',
+            detail: err.error.message,
             life: 2500,
           });
           this.router.navigate(['/products']);
@@ -155,7 +148,7 @@ export class ProductsHomeComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao remover produto!',
+              detail: err.error.message,
               life: 2500,
             });
           },

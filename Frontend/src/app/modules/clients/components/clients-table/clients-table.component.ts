@@ -1,10 +1,9 @@
-import { map } from 'rxjs';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ClientEvent } from 'src/app/models/enums/clients/ClientEvent';
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { GetAllClientResponse } from 'src/app/models/interfaces/clients/response/GetAllClientResponse';
 import { DeleteClientAction } from 'src/app/models/interfaces/clients/event/DeleteClientAction';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 
 @Component({
   selector: 'app-clients-table',
@@ -13,7 +12,7 @@ import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/respon
 })
 export class ClientsTableComponent {
   @Input() clients: Array<GetAllClientResponse> = [];
-  @Input() companies: Array<GetCompaniesResponse> = [];
+  @Input() companies: Array<GetAllCompanyResponse> = [];
   @Output() clientEvent = new EventEmitter<EventAction>();
   @Output() deleteClientEvent = new EventEmitter<DeleteClientAction>();
 

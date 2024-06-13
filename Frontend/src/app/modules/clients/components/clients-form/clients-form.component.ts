@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 import { CreateClientRequest } from 'src/app/models/interfaces/clients/request/CreateClientRequest';
 import { ClientsService } from 'src/app/services/clients/clients.service';
@@ -21,7 +20,7 @@ import { EditClientRequest } from 'src/app/models/interfaces/clients/request/Edi
 })
 export class ClientsFormComponent implements OnInit, OnDestroy{
   private readonly destroy$: Subject<void> = new Subject();
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
   public selectedCompany: Array<{ nome: string; code: string }> = [];
   public clientAction!: {
     event: EventAction;
@@ -42,7 +41,6 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
   });
   public addClientAction = ClientEvent.ADD_CLIENT_EVENT;
   public editClientAction = ClientEvent.EDIT_CLIENT_EVENT;
-  public saleClientAction = ClientEvent.SALE_CLIENT_EVENT;
 
   constructor(
     private companiesService: CompaniesService,
@@ -50,16 +48,11 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
     private clientsDtService: ClientsDataTransferService,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private router: Router,
     public ref: DynamicDialogConfig
   ) {}
 
   ngOnInit(): void {
     this.clientAction = this.ref.data;
-
-    console.log(this.clientAction?.event?.action)
-    console.log(this.editClientAction)
-    console.log(this.clientAction?.clientDatas)
 
     if (
       this.clientAction?.event?.action === this.editClientAction &&
@@ -67,9 +60,6 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
     ) {
       this.getClientSelectedDatas(this.clientAction?.event?.id as string);
     }
-
-    this.clientAction?.event?.action === this.saleClientAction &&
-      this.getClientDatas();
 
     this.getAllCompanies();
   }
@@ -82,7 +72,6 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -110,20 +99,20 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
                 life: 2500,
               });
             }
+            this.addClientForm.reset();
+            this.ref.closable
           },
           error: (err) => {
             console.log(err);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao criar cliente!',
+              detail: err.error.message,
               life: 2500,
             });
           },
         });
     }
-
-    this.addClientForm.reset();
   }
 
   handleSubmitEditClient(): void {
@@ -136,6 +125,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
         nome: this.editClientForm.value.nome as string,
         email: this.editClientForm.value.email as string,
         telefone: this.editClientForm.value.telefone as string,
+        empresa: this.clientSelectedDatas.empresa as string,
       };
 
       this.clientsService
@@ -156,10 +146,9 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao editar cliente!',
+              detail: err.error.message,
               life: 2500,
             });
-            this.editClientForm.reset();
           },
         });
     }
@@ -168,20 +157,13 @@ export class ClientsFormComponent implements OnInit, OnDestroy{
   getClientSelectedDatas(clientId: string): void {
     const allClients = this.clientAction?.clientDatas;
 
-    console.log(allClients)
-
     if (allClients.length > 0) {
       const clientFiltered = allClients.filter(
         (element) => element?._id === clientId
       );
 
-      console.log(clientFiltered)
-      console.log(clientId)
-
       if (clientFiltered) {
         this.clientSelectedDatas = clientFiltered[0];
-
-        console.log(this.clientSelectedDatas)
 
         this.editClientForm.setValue({
           nome: this.clientSelectedDatas?.nome,

@@ -1,7 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SignupUserRequest } from 'src/app/models/interfaces/user/SignupUserRequest';
-import { SignupUserResponse } from 'src/app/models/interfaces/user/SignupUserResponse';
 import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthRequest';
 import { UserService } from 'src/app/services/user/user.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -62,7 +61,7 @@ export class HomeComponent implements OnDestroy{
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `Erro ao fazer o login!`,
+            detail: err.error.message,
             life: 2000,
           });
           console.log(err);
@@ -93,7 +92,7 @@ export class HomeComponent implements OnDestroy{
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `Erro ao criar usuario!`,
+              detail: err.error.message,
               life: 2000,
             });
             console.log(err);

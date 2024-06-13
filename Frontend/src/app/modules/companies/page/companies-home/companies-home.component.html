@@ -1,10 +1,10 @@
 <app-toolbar-navigation></app-toolbar-navigation>
 
-
 <app-company-table
   [companies]="companiesDatas"
   (companyEvent)="handleCompanyAction($event)"
   (deleteCompanyEvent)="handleDeleteCompanyAction($event)"
 ></app-company-table>
+
 <p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
 

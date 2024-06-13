@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CreateProductRequest } from 'src/app/models/interfaces/products/request/CreateProductRequest';
 import { CreateProductResponse } from 'src/app/models/interfaces/products/response/CreateProductResponse';
 import { DeleteProductResponse } from 'src/app/models/interfaces/products/response/DeleteProductResponse';
@@ -15,7 +15,6 @@ import { EditProductRequest } from 'src/app/models/interfaces/products/request/E
 export class ProductsService {
   private API_URL = environment.API_URL;
   private JWT_TOKEN = this.cookie.get('USER_INFO');
-  private ID_USER = this.cookie.get('USER_ID');
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -31,11 +30,9 @@ export class ProductsService {
         `${this.API_URL}/produtos`,
         this.httpOptions
       );
-      //.pipe(map((product) => product.filter((data) => data?.amount > 0)));
   }
 
   deleteProduct(product_id: string): Observable<DeleteProductResponse> {
-    console.log(product_id);
     return this.http.delete<DeleteProductResponse>(
       `${this.API_URL}/produtos/${product_id}`,
       this.httpOptions

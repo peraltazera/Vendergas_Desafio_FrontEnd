@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { GetAllOrderResponse } from 'src/app/models/interfaces/orders/response/GetAllOrderResponse';
 import { GetAllProductsResponse } from 'src/app/models/interfaces/products/response/GetAllProductsResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
@@ -25,7 +25,7 @@ import { EditOrderProductRequest } from 'src/app/models/interfaces/orders_produc
 })
 export class OrdersProductsFormComponent implements OnInit, OnDestroy{
   private readonly destroy$: Subject<void> = new Subject();
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
   public selectedCompany: Array<{ nome: string; code: string }> = [];
   public productsDatas: Array<GetAllProductsResponse> = [];
   public productsDatasByCompanies: Array<GetAllProductsResponse> = [];
@@ -49,7 +49,6 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
   });
   public addOrderProductAction = OrderProductsEvent.ADD_ORDER_PRODUCTS_EVENT;
   public editOrderProductAction = OrderProductsEvent.EDIT_ORDER_PRODUCTS_EVENT;
-  public saleOrderProductAction = OrderProductsEvent.SALE_ORDER_PRODUCTS_EVENT;
 
   constructor(
     private companiesService: CompaniesService,
@@ -66,19 +65,12 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.orderProductAction = this.ref.data;
 
-    console.log(this.orderProductAction?.event?.action)
-    console.log(this.editOrderProductAction)
-    console.log(this.orderProductAction?.orderProductDatas)
-
     if (
       this.orderProductAction?.event?.action === this.editOrderProductAction &&
       this.orderProductAction?.orderProductDatas
     ) {
       this.getOrderProductSelectedDatas(this.orderProductAction?.event?.id as string);
     }
-
-    this.orderProductAction?.event?.action === this.saleOrderProductAction &&
-      this.getProductDatas();
 
     this.getAllProducts();
     this.getAllPedidos();
@@ -93,7 +85,6 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -106,9 +97,7 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            console.log(this.selectedCompany)
             this.productsDatas = response;
-            console.log(this.productsDatas)
           }
         },
       });
@@ -121,9 +110,7 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            console.log(this.selectedCompany)
             this.ordersDatas = response;
-            console.log(this.ordersDatas)
           }
         },
       });
@@ -155,20 +142,19 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
                 life: 2500,
               });
             }
+            this.addOrderProductForm.reset();
           },
           error: (err) => {
             console.log(err);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao criar pedido de produto!',
+              detail: err.error.message,
               life: 2500,
             });
           },
         });
     }
-
-    this.addOrderProductForm.reset();
   }
 
   handleSubmitEditOrderProduct(): void {
@@ -199,10 +185,9 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao editar pedido do produto!',
+              detail: err.error.message,
               life: 2500,
             });
-            this.editOrderProductForm.reset();
           },
         });
     }
@@ -211,20 +196,13 @@ export class OrdersProductsFormComponent implements OnInit, OnDestroy{
   getOrderProductSelectedDatas(orderId: string): void {
     const allOrdersProducts = this.orderProductAction?.orderProductDatas;
 
-    console.log(allOrdersProducts)
-
     if (allOrdersProducts.length > 0) {
       const orderProductFiltered = allOrdersProducts.filter(
         (element) => element?._id === orderId
       );
 
-      console.log(orderProductFiltered)
-      console.log(orderId)
-
       if (orderProductFiltered) {
         this.orderProductSelectedDatas = orderProductFiltered[0];
-
-        console.log(this.orderProductSelectedDatas)
 
         this.editOrderProductForm.setValue({
           quantidade: this.orderProductSelectedDatas?.quantidade

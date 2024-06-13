@@ -8,7 +8,7 @@ import { GetAllClientResponse } from 'src/app/models/interfaces/clients/response
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ClientsFormComponent } from '../../components/clients-form/clients-form.component';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class ClientsHomeComponent implements OnInit, OnDestroy{
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
   public clientsDatas: Array<GetAllClientResponse> = [];
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
 
   constructor(
     private companiesService: CompaniesService,
@@ -45,7 +45,6 @@ export class ClientsHomeComponent implements OnInit, OnDestroy{
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -56,9 +55,7 @@ export class ClientsHomeComponent implements OnInit, OnDestroy{
 
     if (clisntsLoaded.length > 0) {
       this.clientsDatas = clisntsLoaded;
-      console.log(this.clientsDatas)
     } else this.getAPIClientsDatas();
-    console.log(this.clientsDatas)
   }
 
   getAPIClientsDatas() {
@@ -73,14 +70,10 @@ export class ClientsHomeComponent implements OnInit, OnDestroy{
 
             this.clientsDatas.map(obj => {
               let company = this.companiesDatas.find(comp => comp._id === obj.empresa);
-              console.log(company)
               if (company) {
                 obj.empresaNome = company.nomeFantasia;
-                console.log(obj.empresaNome)
               }
             });
-
-            console.log(this.clientsDatas)
           }
         },
         error: (err) => {
@@ -88,7 +81,7 @@ export class ClientsHomeComponent implements OnInit, OnDestroy{
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar clients',
+            detail: err.error.message,
             life: 2500,
           });
           this.router.navigate(['/clients']);
@@ -154,7 +147,7 @@ export class ClientsHomeComponent implements OnInit, OnDestroy{
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao remover cliente!',
+              detail: err.error.message,
               life: 2500,
             });
           },

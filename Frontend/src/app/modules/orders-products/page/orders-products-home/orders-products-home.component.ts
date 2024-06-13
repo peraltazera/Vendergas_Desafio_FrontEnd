@@ -8,7 +8,7 @@ import { GetAllOrderProductResponse } from 'src/app/models/interfaces/orders_pro
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { OrdersProductsFormComponent } from '../../components/orders-products-form/orders-products-form.component';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 import { OrdersService } from 'src/app/services/orders/orders.service';
 import { ProductsService } from 'src/app/services/products/products.service';
@@ -24,7 +24,7 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
   private ref!: DynamicDialogRef;
   public OrdersProductsDatas: Array<GetAllOrderProductResponse> = [];
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
   public productsDatas: Array<GetAllProductsResponse> = [];
   public ordersDatas: Array<GetAllOrderResponse> = [];
   public selectedProduct: Array<{ nome: string; code: string }> = [];
@@ -43,9 +43,9 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.getAllCompanies();
     this.getAllProducts();
     this.getAllPedidos();
-    this.getAllCompanies();
     this.getServiceOrdersProductsDatas();
   }
 
@@ -57,7 +57,6 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -70,8 +69,8 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            this.productsDatas = response;
-            console.log(this.productsDatas)
+            const idCompanies = new Set(this.companiesDatas.map(e => e._id));
+            this.productsDatas = response.filter(obj => idCompanies.has(obj.empresa));
           }
         },
       });
@@ -84,8 +83,8 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            this.ordersDatas = response;
-            console.log(this.ordersDatas)
+            const idCompanies = new Set(this.companiesDatas.map(e => e._id));
+            this.ordersDatas = response.filter(obj => idCompanies.has(obj.empresa));
           }
         },
       });
@@ -96,7 +95,6 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
 
     if (ordersProductsLoaded.length > 0) {
       this.OrdersProductsDatas = ordersProductsLoaded;
-      console.log(this.OrdersProductsDatas)
     } else this.getAPIOrdersProductsDatas();
 
   }
@@ -108,11 +106,11 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            this.OrdersProductsDatas = response
+            const idOrders = new Set(this.ordersDatas.map(e => e._id));
+            this.OrdersProductsDatas = response.filter(obj => idOrders.has(obj.pedido));
 
             this.OrdersProductsDatas.map(obj => {
               let order = this.ordersDatas.find(comp => comp._id === obj.pedido);
-              console.log(order)
               if (order) {
                 obj.pedidoNumero = order.numero;
               }
@@ -120,13 +118,10 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
 
             this.OrdersProductsDatas.map(obj => {
               let product = this.productsDatas.find(cli=> cli._id === obj.produto);
-              console.log(product)
               if (product) {
                 obj.produtoNome = product.nome;
               }
             });
-
-            console.log(this.OrdersProductsDatas)
           }
         },
         error: (err) => {
@@ -134,7 +129,7 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar pedido de produto',
+            detail: err.error.message,
             life: 2500,
           });
           this.router.navigate(['/products']);
@@ -200,7 +195,7 @@ export class OrdersProductsHomeComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao remover pedido de produto!',
+              detail: err.error.message,
               life: 2500,
             });
           },

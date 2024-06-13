@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { GetAllClientResponse } from 'src/app/models/interfaces/clients/response/GetAllClientResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 import { CreateOrderRequest } from 'src/app/models/interfaces/orders/request/CreateOrderRequest';
@@ -23,7 +23,7 @@ import {ClientsService } from '../../../../services/clients/clients.service';
 })
 export class OrderFormComponent implements OnInit, OnDestroy{
   private readonly destroy$: Subject<void> = new Subject();
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
   public clientsDatas: Array<GetAllClientResponse> = [];
   public clientsDatasByCompanies: Array<GetAllClientResponse> = [];
   public selectedCompany: Array<{ nome: string; code: string }> = [];
@@ -48,7 +48,6 @@ export class OrderFormComponent implements OnInit, OnDestroy{
   });
   public addOrderAction = OrderEvent.ADD_ORDER_EVENT;
   public editOrderAction = OrderEvent.EDIT_ORDER_EVENT;
-  public saleOrderAction = OrderEvent.SALE_ORDER_EVENT;
 
   constructor(
     private companiesService: CompaniesService,
@@ -75,9 +74,6 @@ export class OrderFormComponent implements OnInit, OnDestroy{
       this.getOrderSelectedDatas(this.orderAction?.event?.id as string);
     }
 
-    this.orderAction?.event?.action === this.saleOrderAction &&
-      this.getProductDatas();
-
     this.getAllClients();
     this.getAllCompanies();
   }
@@ -90,7 +86,6 @@ export class OrderFormComponent implements OnInit, OnDestroy{
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -103,9 +98,7 @@ export class OrderFormComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            console.log(this.selectedCompany)
             this.clientsDatas = response;
-            console.log(this.clientsDatas)
           }
         },
       });
@@ -138,20 +131,19 @@ export class OrderFormComponent implements OnInit, OnDestroy{
                 life: 2500,
               });
             }
+            this.addOrderForm.reset();
           },
           error: (err) => {
             console.log(err);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao criar pedido!',
+              detail: err.error.message,
               life: 2500,
             });
           },
         });
     }
-
-    this.addOrderForm.reset();
   }
 
   handleSubmitEditOrder(): void {
@@ -164,6 +156,7 @@ export class OrderFormComponent implements OnInit, OnDestroy{
         numero: this.editOrderForm.value.numero as number,
         observacao: this.editOrderForm.value.observacao as string,
         data: this.editOrderForm.value.data as string,
+        empresa: this.orderSelectedDatas.empresa as string,
       };
 
       this.ordersService
@@ -184,10 +177,9 @@ export class OrderFormComponent implements OnInit, OnDestroy{
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao editar produto!',
+              detail: err.error.message,
               life: 2500,
             });
-            this.editOrderForm.reset();
           },
         });
     }
@@ -196,20 +188,13 @@ export class OrderFormComponent implements OnInit, OnDestroy{
   getOrderSelectedDatas(orderId: string): void {
     const allOrders = this.orderAction?.orderDatas;
 
-    console.log(allOrders)
-
     if (allOrders.length > 0) {
       const orderFiltered = allOrders.filter(
         (element) => element?._id === orderId
       );
 
-      console.log(orderFiltered)
-      console.log(orderId)
-
       if (orderFiltered) {
         this.orderSelectedDatas = orderFiltered[0];
-
-        console.log(this.orderSelectedDatas)
 
         this.editOrderForm.setValue({
           numero: this.orderSelectedDatas?.numero,

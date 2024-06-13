@@ -37,7 +37,6 @@ export class CompaniesHomeComponent implements OnInit, OnDestroy {
 
     if (companiesLoaded.length > 0) {
       this.companiesDatas = companiesLoaded;
-      console.log(this.companiesDatas)
     } else this.getAPICompaniesDatas();
 
   }
@@ -50,7 +49,6 @@ export class CompaniesHomeComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
         error: (err) => {
@@ -58,7 +56,7 @@ export class CompaniesHomeComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar empresa',
+            detail: err.error.message,
             life: 2500,
           });
           this.router.navigate(['/companies']);
@@ -124,7 +122,7 @@ export class CompaniesHomeComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao remover empresa!',
+              detail: err.error.message,
               life: 2500,
             });
           },

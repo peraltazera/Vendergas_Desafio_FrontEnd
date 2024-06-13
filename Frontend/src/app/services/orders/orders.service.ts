@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CreateOrderRequest } from 'src/app/models/interfaces/orders/request/CreateOrderRequest';
 import { CreateOrderResponse } from 'src/app/models/interfaces/orders/response/CreateOrderResponse';
 import { DeleteOrderResponse } from 'src/app/models/interfaces/orders/response/DeleteOrderResponse';
@@ -15,7 +15,6 @@ import { EditOrderRequest } from 'src/app/models/interfaces/orders/request/EditO
 export class OrdersService {
   private API_URL = environment.API_URL;
   private JWT_TOKEN = this.cookie.get('USER_INFO');
-  private ID_USER = this.cookie.get('USER_ID');
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -31,11 +30,9 @@ export class OrdersService {
         `${this.API_URL}/pedidos`,
         this.httpOptions
       );
-      //.pipe(map((product) => product.filter((data) => data?.amount > 0)));
   }
 
   deleteOrder(order_id: string): Observable<DeleteOrderResponse> {
-    console.log(order_id);
     return this.http.delete<DeleteOrderResponse>(
       `${this.API_URL}/pedidos/${order_id}`,
       this.httpOptions

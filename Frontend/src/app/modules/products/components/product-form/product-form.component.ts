@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
-import { GetCompaniesResponse } from 'src/app/models/interfaces/companies/response/GetCompaniesResponse';
+import { GetAllCompanyResponse } from 'src/app/models/interfaces/companies/response/GetAllCompanyResponse';
 import { CompaniesService } from 'src/app/services/companies/companies.service';
 import { CreateProductRequest } from 'src/app/models/interfaces/products/request/CreateProductRequest';
 import { ProductsService } from 'src/app/services/products/products.service';
@@ -21,7 +21,7 @@ import { EditProductRequest } from 'src/app/models/interfaces/products/request/E
 })
 export class ProductFormComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
-  public companiesDatas: Array<GetCompaniesResponse> = [];
+  public companiesDatas: Array<GetAllCompanyResponse> = [];
   public selectedCompany: Array<{ nome: string; code: string }> = [];
   public productAction!: {
     event: EventAction;
@@ -42,7 +42,6 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   });
   public addProductAction = ProductEvent.ADD_PRODUCT_EVENT;
   public editProductAction = ProductEvent.EDIT_PRODUCT_EVENT;
-  public saleProductAction = ProductEvent.SALE_PRODUCT_EVENT;
 
   constructor(
     private companiesService: CompaniesService,
@@ -57,19 +56,12 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.productAction = this.ref.data;
 
-    console.log(this.productAction?.event?.action)
-    console.log(this.editProductAction)
-    console.log(this.productAction?.productDatas)
-
     if (
       this.productAction?.event?.action === this.editProductAction &&
       this.productAction?.productDatas
     ) {
       this.getProductSelectedDatas(this.productAction?.event?.id as string);
     }
-
-    this.productAction?.event?.action === this.saleProductAction &&
-      this.getProductDatas();
 
     this.getAllCompanies();
   }
@@ -82,7 +74,6 @@ export class ProductFormComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.length > 0) {
             this.companiesDatas = response;
-            console.log(this.companiesDatas)
           }
         },
       });
@@ -110,20 +101,19 @@ export class ProductFormComponent implements OnInit, OnDestroy {
                 life: 2500,
               });
             }
+            this.addProductForm.reset();
           },
           error: (err) => {
             console.log(err);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao criar produto!',
+              detail: err.error.message,
               life: 2500,
             });
           },
         });
     }
-
-    this.addProductForm.reset();
   }
 
   handleSubmitEditProduct(): void {
@@ -136,6 +126,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
         nome: this.editProductForm.value.nome as string,
         valor: this.editProductForm.value.valor as number,
         descricao: this.editProductForm.value.descricao as string,
+        empresa: this.productSelectedDatas.empresa as string,
       };
 
       this.productsService
@@ -156,10 +147,9 @@ export class ProductFormComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao editar produto!',
+              detail: err.error.message,
               life: 2500,
             });
-            this.editProductForm.reset();
           },
         });
     }
@@ -168,20 +158,13 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   getProductSelectedDatas(productId: string): void {
     const allProducts = this.productAction?.productDatas;
 
-    console.log(allProducts)
-
     if (allProducts.length > 0) {
       const productFiltered = allProducts.filter(
         (element) => element?._id === productId
       );
 
-      console.log(productFiltered)
-      console.log(productId)
-
       if (productFiltered) {
         this.productSelectedDatas = productFiltered[0];
-
-        console.log(this.productSelectedDatas)
 
         this.editProductForm.setValue({
           nome: this.productSelectedDatas?.nome,
