@@ -45,10 +45,10 @@ npm install
 Para rodar o projeto localmente, utilize o comando abaixo:
 
 ```bash
-npm install
+ng s --o
 ```
 
-Abra o seu navegador e navegue até http://localhost:4200/. A aplicação será recarregada automaticamente se você alterar qualquer um dos arquivos de origem.
+Seu navegador ja vai abrir no projeto apos a finalização da compilação. Na primeiva vez pode demorar um pouco, mas nas proximas ja fica bem mais rapido. Caso você queira abrir na mão abra o seu navegador e navegue até http://localhost:4200/home. A aplicação será recarregada automaticamente se você alterar qualquer um dos arquivos de origem.
 
 ### Estrutura do Projeto
 
