@@ -9,7 +9,7 @@
 
 ## Introdução
 
-Este é um projeto Angular criado com Angular CLI 15 e Node.js 18. O objetivo deste documento é fornecer as instruções necessárias para clonar, instalar e executar o projeto localmente.
+Este é um projeto Angular criado com Angular CLI 15 e Node.js 18. O objetivo deste documento é fornecer as instruções necessárias para clonar, instalar e executar o projeto localmente. Está e a parte FrontEnd de um projeto fullstack onde o BackEnd se encontra neste outro repositório [aqui!]([https://nodejs.org/](https://github.com/peraltazera/Vendergas_Desafio_BackEnd))
 
 ## Pré-requisitos
 
