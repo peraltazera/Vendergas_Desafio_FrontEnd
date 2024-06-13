@@ -1,0 +1,63 @@
+<div *ngIf="orderProductAction?.event?.action === addOrderProductAction">
+  <form [formGroup]="addOrderProductForm" (ngSubmit)="handleSubmitAddOrderProduct()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <p-dropdown
+        styleClass="w-full"
+        [options]="companiesDatas"
+        [(ngModel)]="selectedCompany"
+        optionLabel="nomeFantasia"
+        optionValue="_id"
+        placeholder="Selecione uma empresa"
+        formControlName="empresa"
+        (onChange)="onCompanyChange($event.value)"
+      ></p-dropdown>
+      <p-dropdown
+      styleClass="w-full"
+      [options]="ordersDatasByCompanies"
+      [(ngModel)]="selectedOrder"
+      optionLabel="numero"
+      optionValue="_id"
+      placeholder="Selecione um pedido"
+      formControlName="pedido"
+    ></p-dropdown>
+    <p-dropdown
+    styleClass="w-full"
+    [options]="productsDatasByCompanies"
+    [(ngModel)]="selectedProduct"
+    optionLabel="nome"
+    optionValue="_id"
+    placeholder="Selecione um produto"
+    formControlName="produto"
+  ></p-dropdown>
+      <input pInputText placeholder="Quantidade" formControlName="quantidade" />
+      <div class="flex flex-row justify-content-center align-content-center align-items-center m-1">
+        <p-button
+        [disabled]="!addOrderProductForm.valid"
+        type="submit"
+        label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="orderProductAction?.event?.action === editOrderProductAction">
+  <form [formGroup]="editOrderProductForm" (ngSubmit)="handleSubmitEditOrderProduct()">
+    <div class="card flex flex-column md:flex-column gap-3">
+      <input pInputText placeholder="Quantidade" formControlName="quantidade" />
+
+      <div
+        class="flex flex-row justify-content-center align-content-center align-items-center"
+      >
+        <p-button
+          [disabled]="!editOrderProductForm.valid"
+          type="submit"
+          label="Concluir"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+

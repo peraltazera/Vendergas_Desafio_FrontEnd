@@ -111,16 +111,8 @@ export class OrderFormComponent implements OnInit, OnDestroy{
       });
   }
 
-  onCompanyChange(): void {
-    console.log(this.selectedCompany)
-    //this.clientsDatasByCompanies = this.clientsDatas.filter(obj => this.selectedCompany = obj._id)
-  }
-
-  onCompanyChange2(selectedCompanyId: string) {
-    console.log(selectedCompanyId)
-    console.log(this.clientsDatas)
+  onCompanyChange(selectedCompanyId: string) {
     this.clientsDatasByCompanies = this.clientsDatas.filter(obj => selectedCompanyId === obj.empresa)
-    console.log(this.clientsDatasByCompanies)
   }
 
   handleSubmitAddOrder(): void {
@@ -169,7 +161,7 @@ export class OrderFormComponent implements OnInit, OnDestroy{
       this.orderAction.event.id
     ) {
       const requestEditOrder: EditOrderRequest = {
-        numero: Number(this.addOrderForm.value.numero),
+        numero: this.editOrderForm.value.numero as number,
         observacao: this.editOrderForm.value.observacao as string,
         data: this.editOrderForm.value.data as string,
       };

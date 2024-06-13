@@ -2,17 +2,17 @@
   <div class="col-12">
     <p-card
       styleClass="shadow-3 m-5 text-indigo-800"
-      header="Produtos"
+      header="Lançamento de Pedidos Produtos"
     >
       <p-table
         #productsTable
-        [value]="products"
+        [value]="ordersProducts"
         [rows]="10"
         [paginator]="true"
         [responsive]="true"
         [globalFilterFields]="['name', 'amount']"
         [tableStyle]="{ 'min-width': '75rem' }"
-        [(selection)]="productSelected"
+        [(selection)]="orderProductSelected"
         [rowHover]="true"
         [showCurrentPageReport]="true"
         dataKey="id"
@@ -20,16 +20,16 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="name">
+            <th pSortableColumn="pedido">
               <div class="flex justify-content-between align-items-center">
                 <div class="flex justify-content-between align-items-center">
-                  Nome
+                  Numero Pedido
                 </div>
                 <div class="flex justify-content-between align-items-center">
-                  <p-sortIcon field="name"></p-sortIcon>
+                  <p-sortIcon field="pedido"></p-sortIcon>
                   <p-columnFilter
                     type="text"
-                    field="name"
+                    field="pedido"
                     display="menu"
                     matchMode="contains"
                     [showMatchModes]="false"
@@ -40,16 +40,16 @@
               </div>
             </th>
 
-            <th pSortableColumn="price">
+            <th pSortableColumn="produto">
               <div class="flex justify-content-between align-items-center">
                 <div class="flex justify-content-between align-items-center">
-                  Preço
+                  Produto
                 </div>
                 <div class="flex justify-content-between align-items-center">
-                  <p-sortIcon field="price"></p-sortIcon>
+                  <p-sortIcon field="produto"></p-sortIcon>
                   <p-columnFilter
                     type="text"
-                    field="price"
+                    field="produto"
                     display="menu"
                     matchMode="contains"
                     [showMatchModes]="false"
@@ -60,36 +60,16 @@
               </div>
             </th>
 
-            <th pSortableColumn="description">
+            <th pSortableColumn="quantidade">
               <div class="flex justify-content-between align-items-center">
                 <div class="flex justify-content-between align-items-center">
-                  Descrição
+                  Quantidade
                 </div>
                 <div class="flex justify-content-between align-items-center">
-                  <p-sortIcon field="description"></p-sortIcon>
+                  <p-sortIcon field="quantidade"></p-sortIcon>
                   <p-columnFilter
                     type="text"
-                    field="description"
-                    display="menu"
-                    matchMode="contains"
-                    [showMatchModes]="false"
-                    [showOperator]="false"
-                    [showAddButton]="false"
-                  ></p-columnFilter>
-                </div>
-              </div>
-            </th>
-
-            <th pSortableColumn="empresa">
-              <div class="flex justify-content-between align-items-center">
-                <div class="flex justify-content-between align-items-center">
-                  Empresa
-                </div>
-                <div class="flex justify-content-between align-items-center">
-                  <p-sortIcon field="empresa"></p-sortIcon>
-                  <p-columnFilter
-                    type="text"
-                    field="empresa"
+                    field="quantidade"
                     display="menu"
                     matchMode="contains"
                     [showMatchModes]="false"
@@ -108,21 +88,18 @@
                   label="Adicionar"
                   pTooltip="Adicionar produto"
                   tooltipPosition="top"
-                  (onClick)="handleProductEvent(addProductEvent)"
+                  (onClick)="handleOrderProductEvent(addOrderProductEvent)"
                 ></p-button>
               </div>
             </th>
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-product>
+        <ng-template pTemplate="body" let-orderProduct>
           <tr>
-            <td>{{ product?.nome }}</td>
-            <td>{{ product?.valor | currency : "BRL" }}</td>
-            <td [pTooltip]="product?.descricao" tooltipPosition="top">
-              {{ product?.descricao }}
-            </td>
-            <td>{{ product?.empresaNome }}</td>
+            <td>{{ orderProduct?.pedidoNumero }}</td>
+            <td>{{ orderProduct?.produtoNome }}</td>
+            <td>{{ orderProduct?.quantidade }}</td>
             <td>
               <div
                 class="flex justify-content-center gap-3 align-content-center align-items-center"
@@ -134,7 +111,7 @@
                   class="p-button-rounded p-button-warning"
                   pTooltip="Editar produto"
                   tooltipPosition="top"
-                  (click)="handleProductEvent(editProductEvent, product?._id)"
+                  (click)="handleOrderProductEvent(editOrderProductEvent, orderProduct?._id)"
                 ></button>
                 <button
                   pButton
@@ -143,7 +120,7 @@
                   class="p-button-rounded p-button-danger"
                   pTooltip="Remover Produto"
                   tooltipPosition="top"
-                  (click)="handleDeleteProduct(product?._id, product?.nome)"
+                  (click)="handleDeleteOrderProduct(orderProduct?._id, orderProduct?.produtoNome)"
                 ></button>
               </div>
             </td>
@@ -153,4 +130,5 @@
     </p-card>
   </div>
 </div>
+
 

@@ -146,7 +146,7 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
         maximizable: true,
         data: {
           event: event,
-          productDatas: this.ordersDatas,
+          orderDatas: this.ordersDatas,
         },
       });
       this.ref.onClose.pipe(takeUntil(this.destroy$)).subscribe({
@@ -171,10 +171,10 @@ export class OrdersHomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteOrder(product_id: string) {
-    if (product_id) {
+  deleteOrder(order_id: string) {
+    if (order_id) {
       this.ordersService
-        .deleteOrder(product_id)
+        .deleteOrder(order_id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
