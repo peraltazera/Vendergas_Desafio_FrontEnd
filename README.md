@@ -54,10 +54,10 @@ Seu navegador ja vai abrir no projeto apos a finalização da compilação. Na p
 
 Uma breve descrição da estrutura dos arquivos e diretórios principais do projeto:
 
-src/: Contém o código fonte da aplicação.
-  app/: Contém os componentes, serviços e outros módulos da aplicação.
-  assets/: Contém os arquivos estáticos como imagens e ícones.
-  environments/: Contém os arquivos de configuração de ambiente.
-angular.json: Arquivo de configuração do Angular CLI.
-package.json: Contém as dependências e scripts do projeto.
-README.md: Documentação do projeto.
+- src/: Contém o código fonte da aplicação.
+  - app/: Contém os componentes, serviços e outros módulos da aplicação.
+  - assets/: Contém os arquivos estáticos como imagens e ícones.
+  - environments/: Contém os arquivos de configuração de ambiente.
+- angular.json: Arquivo de configuração do Angular CLI.
+- package.json: Contém as dependências e scripts do projeto.
+- README.md: Documentação do projeto.
