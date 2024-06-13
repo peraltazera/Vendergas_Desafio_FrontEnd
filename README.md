@@ -29,7 +29,7 @@ Clone o repositório do GitHub para o seu ambiente local usando o comando abaixo
 
 ```bash
 git clone https://github.com/seu-usuario/nome-do-repositorio.git
-cd nome-do-repositorio
+cd nome-do-repositorio/frontend
 ```
 
 ## Instalar Dependências
